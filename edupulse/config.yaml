@@ -1,0 +1,101 @@
+use_cases:
+  dropout:
+    # === DATA SOURCE ===
+    csv_path: "data/dropout_data.csv"
+
+    # no student_id column in your CSV, use dataframe index instead
+    id_column: null
+
+    target_column: "Target"
+
+    # === MODEL SETTINGS ===
+    model_type: "classification"
+
+    # use all numeric columns except the target
+    features:
+      - "Marital status"
+      - "Application mode"
+      - "Application order"
+      - "Course"
+      - "Daytime/evening attendance\t"
+      - "Previous qualification"
+      - "Previous qualification (grade)"
+      - "Nacionality"
+      - "Mother's qualification"
+      - "Father's qualification"
+      - "Mother's occupation"
+      - "Father's occupation"
+      - "Displaced"
+      - "Educational special needs"
+      - "Debtor"
+      - "Tuition fees up to date"
+      - "Gender"
+      - "Scholarship holder"
+      - "Age at enrollment"
+      - "International"
+      - "Curricular units 1st sem (credited)"
+      - "Curricular units 1st sem (enrolled)"
+      - "Curricular units 1st sem (evaluations)"
+      - "Curricular units 1st sem (approved)"
+      - "Curricular units 1st sem (grade)"
+      - "Curricular units 1st sem (without evaluations)"
+      - "Curricular units 2nd sem (credited)"
+      - "Curricular units 2nd sem (enrolled)"
+      - "Curricular units 2nd sem (evaluations)"
+      - "Curricular units 2nd sem (approved)"
+      - "Curricular units 2nd sem (grade)"
+      - "Curricular units 2nd sem (without evaluations)"
+      - "Unemployment rate"
+      - "Inflation rate"
+      - "GDP"
+
+    # === RISK BANDS (for executor) ===
+    risk_bands:
+      high: 0.7
+      medium: 0.4
+
+    # === OUTPUT PATHS ===
+    output:
+      predictions_csv: "outputs/dropout_predictions.csv"
+      feature_importance_csv: "outputs/dropout_feature_importance.csv"
+      review_report: "outputs/dropout_review.txt"
+
+  sentiment:
+    # === DATA SOURCE ===
+    csv_path: "data/sentiment_data.csv"
+
+    # Id is your primary key here
+    id_column: "Id"
+
+    # Text field to analyse
+    text_column: "Review_Text"
+
+    # Optional grouping for course-level summaries
+    group_by:
+      - "Course_Id"
+      - "Course_Name"
+      - "Course_Year"
+
+    # If you want to use the existing Sentiment labels as supervision
+    label_column: "Sentiment"   # e.g. positive / neutral / negative
+
+    # === MODEL / LOGIC SETTINGS ===
+    model_type: "sentiment_nlp"
+
+    sentiment_scale:
+      min: -1.0
+      max: 1.0
+      negative_threshold: -0.2
+      positive_threshold: 0.2
+
+    # We might want to keep these metadata columns in the detailed output
+    keep_columns:
+      - "Instructor_Name"
+      - "Difficulty_Level"
+      - "Workload"
+
+    # === OUTPUT PATHS ===
+    output:
+      summary_csv: "outputs/sentiment_summary.csv"     # course/year-level rollup
+      details_csv: "outputs/sentiment_detailed.csv"    # each review with sentiment score
+      review_report: "outputs/sentiment_review.txt"
